@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.json.JSONObject;
@@ -20,43 +23,75 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class MainActivity extends AppCompatActivity {
 
+    ScrollView svSelectLang;
+    RadioGroup rgLangGroup;
+    RadioButton rbSelectAuto,rbSelectEn,rbSelectCn;
+
     EditText etTextToTrans;
     Button btnStartTrans;
     TextView tvTextOutput;
+
+    String fromLang,toLang;
+    String[] Langs={"auto","en","cn"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Select Language section.
+        svSelectLang=findViewById(R.id.mainAct_SelectLang);
+        rgLangGroup=findViewById(R.id.mainAct_LangRadioGroup);
+        rbSelectAuto=findViewById(R.id.mainAct_Select_Auto);
+        rbSelectEn=findViewById(R.id.mainAct_Select_English);
+        rbSelectCn=findViewById(R.id.mainAct_Select_Chinese);
+
+        // Inout and output section.
         etTextToTrans=findViewById(R.id.mainAct_TextToTrans);
         btnStartTrans=findViewById(R.id.mainAct_StartTrans);
         tvTextOutput=findViewById(R.id.mainAct_TextOutput);
 
-        btnStartTrans.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String textToTrans=etTextToTrans.getText().toString();
-                        String textOutput=transText(textToTrans);
-                        setTvTextOutputCont(textOutput);
-                    }
-                }).start();
-            }
+        rgLangGroup.setOnCheckedChangeListener((radioGroup, i) -> {
+            // todo: add logic.
         });
 
+        // Start Translation.
+        btnStartTrans.setOnClickListener(view -> new Thread( () -> {
+            String textToTrans=etTextToTrans.getText().toString();
+            String textOutput=transText(textToTrans);
+            setTvTextOutputCont(textOutput);
+        }).start());
+
+    }
+
+    // Show/hide Checkbox.
+
+    /**
+     *
+     * @param status        true for on | false for off.
+     * @param isDestLang    if true, set "auto" uncheckable.
+     * @param checkedOne    set which "were" selected.
+     */
+    public void showOrHideRadioGroup(boolean status,boolean isDestLang,int checkedOne){
+        if(isDestLang){
+            rbSelectAuto.setClickable(false);
+        }
+        if(status){
+            switch (checkedOne){
+                case 1:
+                    rbSelectAuto.setChecked(true);
+                    break;
+                case 2:
+                    // todo: complete.
+            }
+        }else{
+            svSelectLang.setVisibility(View.GONE);
+        }
     }
 
     // Set the Output view new content
     public void setTvTextOutputCont(String text){
-        MainActivity.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                tvTextOutput.setText(text);
-            }
-        });
+        MainActivity.this.runOnUiThread(() -> tvTextOutput.setText(text));
     }
 
     // Use baidu API translate the text.
@@ -99,13 +134,11 @@ public class MainActivity extends AppCompatActivity {
 
                 JSONObject jsonObject = new JSONObject(new String(dataByte, StandardCharsets.UTF_8));
 
-                String textOutput=jsonObject.getJSONObject("result").getJSONArray("trans_result")
+                return jsonObject.getJSONObject("result").getJSONArray("trans_result")
                         .getJSONObject(0).getString("dst");
-                return textOutput;
             }
         }catch(Exception e){
             System.err.println(e.getMessage());
-            System.out.println("err!!");
         }
         return "Null! Error(s) occurred!!";
     }
@@ -115,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         public static byte[] read(InputStream inStream) throws Exception{
             ByteArrayOutputStream outStream = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];
-            int len = 0;
+            int len;
             while((len = inStream.read(buffer)) != -1)
             {
                 outStream.write(buffer,0,len);

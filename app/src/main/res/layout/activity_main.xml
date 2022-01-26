@@ -7,6 +7,35 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <ScrollView
+        android:id="@+id/mainAct_SelectLang"
+        android:layout_width="match_parent"
+        android:layout_height="166dp"
+        android:visibility="gone">
+        <RadioGroup
+            android:id="@+id/mainAct_LangRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/mainAct_Select_Auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Auto"/>
+            <RadioButton
+                android:id="@+id/mainAct_Select_English"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="English"/>
+            <RadioButton
+                android:id="@+id/mainAct_Select_Chinese"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Chinese"/>
+
+        </RadioGroup>
+    </ScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,6 +49,7 @@
             android:layout_weight="50"
             android:layout_margin="10dp"
             android:text="English"/>
+
         <Button
             android:id="@+id/mainAct_SwpSDLang"
             android:layout_width="0dp"
