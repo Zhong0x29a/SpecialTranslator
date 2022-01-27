@@ -7,10 +7,8 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -62,7 +60,7 @@ public class TranslateAPI {
             }catch(Exception e){
                 System.err.println(e.getMessage());
             }
-            return "Empty input? ";
+            return ":<..";
         }
     }
 
@@ -99,7 +97,7 @@ public class TranslateAPI {
             }catch (Exception e){
                 System.err.println(e.getMessage());
             }
-            return "Error! ";
+            return ":(..";
         }
 
         /**
@@ -110,7 +108,7 @@ public class TranslateAPI {
          */
         static String getTType(@NonNull String fromLang, String toLang){
             if( !(fromLang.equals(toLang)) ) {
-                String TType= ""; // Translate type
+                String TType= "AUTO"; // Translate type
                 switch (fromLang) {
                     case "zh":
                         TType = "zh_cn2";
@@ -118,6 +116,8 @@ public class TranslateAPI {
                     case "en":
                         TType = "en2";
                         break;
+                    default:
+                        return "AUTO";
                 }
                 switch (toLang) {
                     case "zh":
@@ -128,7 +128,6 @@ public class TranslateAPI {
                         break;
                 }
                 return TType;
-
             }else{
                 return "AUTO";
             }
