@@ -5,7 +5,31 @@
     tools:context=".MainActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#eee">
+
+    <!-- Title bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:orientation="horizontal"
+        android:background="@color/teal_200">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:textSize="32sp"
+            android:textAlignment="center"
+            android:text="Special Translator"/>
+
+        <Button
+            android:id="@+id/mainAct_MenuBtn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginVertical="0dp"
+            android:padding="0dp"
+            android:background="@mipmap/ic_menu" />
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/mainAct_SelectLang"
@@ -16,7 +40,6 @@
             android:id="@+id/mainAct_LangRadioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <RadioButton
                 android:id="@+id/mainAct_Select_Auto"
                 android:layout_width="match_parent"
@@ -32,7 +55,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Chinese"/>
-
         </RadioGroup>
     </ScrollView>
 
@@ -41,7 +63,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginVertical="8dp">
-
         <Button
             android:id="@+id/mainAct_SouLang"
             android:layout_width="0dp"
@@ -49,7 +70,6 @@
             android:layout_weight="50"
             android:layout_margin="10dp"
             android:text="English"/>
-
         <Button
             android:id="@+id/mainAct_SwpSDLang"
             android:layout_width="0dp"
@@ -58,7 +78,6 @@
             android:layout_margin="10dp"
             android:padding="0dp"
             android:text="~"/>
-
         <Button
             android:id="@+id/mainAct_DesLang"
             android:layout_width="0dp"
@@ -66,19 +85,18 @@
             android:layout_weight="50"
             android:layout_margin="10dp"
             android:text="Chinese"/>
-
     </LinearLayout>
 
     <EditText
         android:id="@+id/mainAct_TextToTrans"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
         android:text="Input Words to translate here. "
         android:layout_marginHorizontal="28dp"
         android:layout_marginTop="18dp"
-        />
+        android:textSize="20sp"
+        android:maxHeight="230dp"
+        android:inputType="textMultiLine"/>
 
     <Button
         android:id="@+id/mainAct_StartTrans"
@@ -94,6 +112,8 @@
         android:layout_marginHorizontal="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""/>
+        android:text=""
+        android:maxHeight="230dp"
+        android:overScrollMode="ifContentScrolls"/>
 
 </LinearLayout>
