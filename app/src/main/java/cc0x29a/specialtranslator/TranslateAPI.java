@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.Buffer;
 import java.nio.charset.StandardCharsets;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -54,8 +55,17 @@ public class TranslateAPI {
 
                     JSONObject jsonObject = new JSONObject(new String(dataByte, StandardCharsets.UTF_8));
 
-                    return jsonObject.getJSONObject("result").getJSONArray("trans_result")
-                            .getJSONObject(0).getString("dst");
+                    StringBuffer sb = new StringBuffer();
+                    for(int i=0;!jsonObject.getJSONObject("result").getJSONArray("trans_result")
+                                .isNull(i);i++){
+                        sb.append(jsonObject.getJSONObject("result").getJSONArray("trans_result")
+                                .getJSONObject(i).getString("dst"));
+                        sb.append("\n");
+
+                        System.out.println(jsonObject.getJSONObject("result").getJSONArray("trans_result")
+                                .getJSONObject(i).getString("dst"));
+                    }
+                    return sb.toString();
                 }
             }catch(Exception e){
                 System.err.println(e.getMessage());

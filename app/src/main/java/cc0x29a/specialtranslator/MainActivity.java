@@ -13,6 +13,8 @@ import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -131,6 +133,11 @@ public class MainActivity extends AppCompatActivity {
             setTvTextOutputCont(textOutput);
         }).start());
 
+        new Thread(()->{
+            String[] strArr=EveryDayAPI.EverydaySentence.fetchEverydaySentence();
+            setTvTextStcEvrDay(strArr[0],strArr[1]);
+        }).start();
+
     }
 
     //
@@ -222,6 +229,14 @@ public class MainActivity extends AppCompatActivity {
     // Set the Output view new content
     public void setTvTextOutputCont(String text){
         MainActivity.this.runOnUiThread(() -> tvTextOutput.setText(text+"\n\n--by "+API));
+    }
+
+    // Display the Everyday Sentence.
+    public void setTvTextStcEvrDay(String textEng,String textZh){
+        MainActivity.this.runOnUiThread(() -> {
+            TextView tv=findViewById(R.id.mainAct_StcEvrDay);
+            tv.setText("Everyday sentence: \n\n    "+textEng+"\n    "+textZh);
+        });
     }
 
 }
