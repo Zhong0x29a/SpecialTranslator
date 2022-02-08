@@ -1,7 +1,6 @@
 package cc0x29a.specialtranslator;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.TypedArrayUtils;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
@@ -21,7 +20,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
@@ -55,28 +53,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // todo: save "last status"
-        SharedPreferences sharedPreferences=getSharedPreferences("token",MODE_PRIVATE);
-
-        new Thread(()->{
-            long timeCurr=System.currentTimeMillis();
-            long BDTokenExpDate=Long.parseLong(sharedPreferences.getString("BaiduToken_expDate","0"));
-            if(timeCurr >= BDTokenExpDate){
-                String token=TranslateAPI.BaiduAPI.fetchNewToken();
-                sharedPreferences.edit().putString("BaiduToken",token).apply();
-                sharedPreferences.edit().putString("BaiduToken_expDate",(timeCurr+7*24*60*60*1000)+"").apply();
-                BaiduAPIToken=token;
-            }
-        }).start();
-
-        // set default sourceLang & DestinyLang
-        fromLang="en";
-        toLang="zh";
-        API="baidu";
-
-        // fetch baidu api token
-        BaiduAPIToken=sharedPreferences.getString("BaiduToken","");
-
         // Select Language section.
         id2lang.put(R.id.mainAct_Select_Auto,"auto");
         id2lang.put(R.id.mainAct_Select_English,"en");
@@ -104,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         btnUseYoudao=findViewById(R.id.mainAct_MenuUseYoudaoAPI);
 
         // Bind Listener.
-
+        // Languages Radio group.
         rgLangGroup.setOnCheckedChangeListener((radioGroup, i) -> {
             // set the lang.
             try {
@@ -121,17 +97,16 @@ public class MainActivity extends AppCompatActivity {
 
             // hide the scroll view
             showOrHideRadioGroupAuto("no");
-//            setRadioGroupChecked(false,fromLang);
         });
 
         // click to select another language.
-        btnSelectSouLang.setOnClickListener(cliListenerChangeLang);
-        btnSwapSDLang.setOnClickListener(cliListenerChangeLang);
-        btnSelectDesLang.setOnClickListener(cliListenerChangeLang);
+        btnSelectSouLang.setOnClickListener(cliListenerChangeLangBTN);
+        btnSwapSDLang.setOnClickListener(cliListenerChangeLangBTN);
+        btnSelectDesLang.setOnClickListener(cliListenerChangeLangBTN);
 
         // open/close menu
-        findViewById(R.id.mainAct_MenuBtn).setOnClickListener(view -> openOrCloseMenu());
-        findViewById(R.id.mainAct_TopBarMenu).setOnClickListener(view -> openOrCloseMenu());
+        findViewById(R.id.mainAct_MenuBtn).setOnClickListener(view -> openOrCloseTopBarMenu());
+        findViewById(R.id.mainAct_TopBarMenu).setOnClickListener(view -> openOrCloseTopBarMenu());
 
         // select API
         btnUseBaidu.setOnClickListener(cliListenerChangeAPI);
@@ -168,10 +143,33 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start());
 
-        // fetch the everyday sentence.
+        // save "last status"
+        SharedPreferences sharedPreferences=getSharedPreferences("info",MODE_PRIVATE);
+        // to refresh Baidu api token.
         new Thread(()->{
-            String[] strArr=EveryDayAPI.EverydaySentence.fetchEverydaySentence();
-            setTvTextStcEvrDay(strArr[0],strArr[1]);
+            long timeCurr=System.currentTimeMillis();
+            long BDTokenExpDate=Long.parseLong(sharedPreferences.getString("BaiduToken_expDate","0"));
+            if(timeCurr >= BDTokenExpDate){
+                String token=TranslateAPI.BaiduAPI.fetchNewToken();
+                sharedPreferences.edit().putString("BaiduToken",token).apply();
+                sharedPreferences.edit().putString("BaiduToken_expDate",(timeCurr+7*24*60*60*1000)+"").apply();
+                BaiduAPIToken=token;
+            }
+        }).start();
+
+        // fetch baidu api token from local
+        BaiduAPIToken=sharedPreferences.getString("BaiduToken","");
+
+        // set default sourceLang & DestinyLang
+        new Thread(()-> {
+            fromLang=sharedPreferences.getString("fromLang","en");
+            toLang=sharedPreferences.getString("toLang","zh");
+            API=sharedPreferences.getString("API","baidu");
+
+            MainActivity.this.runOnUiThread(()->{
+                btnSelectSouLang.setText(fromLang);
+                btnSelectDesLang.setText(toLang);
+            });
         }).start();
 
         // todo: set it fold able
@@ -182,9 +180,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // fetch the everyday sentence.
+        new Thread(()->{
+            String[] strArr=EveryDayAPI.EverydaySentence.fetchEverydaySentence();
+            setTvTextStcEvrDay(strArr[0],strArr[1]);
+        }).start();
+    }
+
     // Change language
     @SuppressLint("NonConstantResourceId")
-    View.OnClickListener cliListenerChangeLang = view -> {
+    View.OnClickListener cliListenerChangeLangBTN = view -> {
         switch (view.getId()){
             case R.id.mainAct_SouLang:
                 // edit the tag
@@ -207,6 +216,9 @@ public class MainActivity extends AppCompatActivity {
         }
         btnSelectSouLang.setText(fromLang);
         btnSelectDesLang.setText(toLang);
+
+        getSharedPreferences("info",MODE_PRIVATE).edit().putString("fromLang",fromLang).apply();
+        getSharedPreferences("info",MODE_PRIVATE).edit().putString("toLang",toLang).apply();
     };
 
     // Change API
@@ -214,14 +226,17 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()){
             case R.id.mainAct_MenuUseBaiduAPI:
                 API="baidu";
+                getSharedPreferences("info",MODE_PRIVATE).edit().putString("API","baidu").apply();
                 break;
             case R.id.mainAct_MenuUseYoudaoAPI:
                 API="youdao";
+                getSharedPreferences("info",MODE_PRIVATE).edit().putString("API","youdao").apply();
                 break;
             default:
                 API="baidu";
+                getSharedPreferences("info",MODE_PRIVATE).edit().putString("API","baidu").apply();
         }
-        openOrCloseMenu();
+        openOrCloseTopBarMenu();
     };
 
     // Show/hide Checkbox.
@@ -259,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void openOrCloseMenu(){
+    public void openOrCloseTopBarMenu(){
 //        mainAct_mainContainLayout
         LinearLayout l=findViewById(R.id.mainAct_TopBarMenu);
         if(l.getVisibility()==View.VISIBLE){
