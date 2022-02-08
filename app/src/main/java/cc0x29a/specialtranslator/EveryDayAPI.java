@@ -1,6 +1,5 @@
 package cc0x29a.specialtranslator;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
@@ -22,11 +21,12 @@ public class EveryDayAPI {
                 conn.setReadTimeout(5000);
                 conn.setDoOutput(true);
 
-//                OutputStream
-
                 if(conn.getResponseCode()==200){
                     InputStream is=conn.getInputStream();
                     byte[] data=TranslateAPI.StreamTool.read(is);
+
+                    is.close();
+                    conn.disconnect();
 
                     JSONObject dataJSON=new JSONObject(new String(data, StandardCharsets.UTF_8));
 

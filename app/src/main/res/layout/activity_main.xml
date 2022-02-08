@@ -1,208 +1,238 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<!-- Container -->
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/newsprint">
 
-    <!-- Container -->
-    <RelativeLayout
+    <!-- 2nd layer -->
+    <!-- Main Content & Top Bar & Everyday sentence.-->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <!-- Main Content & Top Bar -->
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/mainAct_mainContainLayout">
+        <!-- Title bar -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/mainAct_mainContainLayout">
-            <!-- Title bar -->
+            android:layout_height="58dp"
+            android:orientation="horizontal"
+            android:background="@color/c3"
+            android:baselineAligned="false">
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="58dp"
-                android:orientation="horizontal"
-                android:background="@color/c3">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="8"
-                    android:gravity="center">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:paddingStart="8dp"
-                        android:textSize="26sp"
-                        android:textAlignment="textStart"
-                        android:text="Special Translator"
-                        android:textColor="#0A000A"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:gravity="end">
-                    <Button
-                        android:id="@+id/mainAct_MenuBtn"
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
-                        android:layout_marginVertical="10dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@mipmap/ic_menu" />
-                </LinearLayout>
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:paddingHorizontal="8dp"
+                    android:textSize="26sp"
+                    android:textAlignment="textStart"
+                    android:text="@string/app_name"
+                    android:textColor="#0A000A"/>
             </LinearLayout>
 
-            <!-- Main Content -->
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <LinearLayout
-                    android:id="@+id/mainAct_mainContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <ScrollView
-                        android:id="@+id/mainAct_SelectLang"
-                        android:layout_width="match_parent"
-                        android:layout_height="166dp"
-                        android:visibility="gone"
-                        android:paddingHorizontal="3dp">
-                        <RadioGroup
-                            android:id="@+id/mainAct_LangRadioGroup"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                            <RadioButton
-                                android:id="@+id/mainAct_Select_Auto"
-                                android:layout_width="match_parent"
-                                android:layout_height="38dp"
-                                android:textSize="20sp"
-                                android:textAlignment="textStart"
-                                android:text="Auto"/>
-                            <RadioButton
-                                android:id="@+id/mainAct_Select_English"
-                                android:layout_width="match_parent"
-                                android:layout_height="38dp"
-                                android:textSize="20sp"
-                                android:textAlignment="textStart"
-                                android:text="English"/>
-                            <RadioButton
-                                android:id="@+id/mainAct_Select_Chinese"
-                                android:layout_width="match_parent"
-                                android:layout_height="38dp"
-                                android:textSize="20sp"
-                                android:textAlignment="textStart"
-                                android:text="Chinese"/>
-                        </RadioGroup>
-                    </ScrollView>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="66dp"
-                        android:orientation="horizontal"
-                        android:layout_marginVertical="8dp">
-                        <Button
-                            android:id="@+id/mainAct_SouLang"
-                            android:layout_width="0dp"
-                            android:layout_height="48dp"
-                            android:layout_weight="1"
-                            android:layout_margin="10dp"
-                            android:text="English"
-                            android:background="@drawable/set_button_selector"/>
-                        <Button
-                            android:id="@+id/mainAct_SwpSDLang"
-                            android:layout_width="44dp"
-                            android:layout_height="44dp"
-                            android:layout_margin="10dp"
-                            android:padding="0dp"
-                            android:text="~"
-                            android:background="@drawable/set_button_selector"/>
-                        <Button
-                            android:id="@+id/mainAct_DesLang"
-                            android:layout_width="0dp"
-                            android:layout_height="48dp"
-                            android:layout_weight="1"
-                            android:layout_margin="10dp"
-                            android:text="Chinese"
-                            android:background="@drawable/set_button_selector"/>
-                    </LinearLayout>
-
-                    <EditText
-                        android:id="@+id/mainAct_TextToTrans"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Input Words to translate here. "
-                        android:text=""
-                        android:layout_marginHorizontal="28dp"
-                        android:layout_marginTop="18dp"
-                        android:textSize="20sp"
-                        android:maxHeight="230dp"
-                        android:inputType="textMultiLine"/>
-
-                    <Button
-                        android:id="@+id/mainAct_StartTrans"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginVertical="12dp"
-                        android:layout_marginHorizontal="36dp"
-                        android:background="@drawable/set_button_selector"
-                        android:text="Translate"/>
-
-                    <TextView
-                        android:id="@+id/mainAct_TextOutput"
-                        android:layout_marginVertical="8dp"
-                        android:layout_marginHorizontal="20dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:maxHeight="230dp"
-                        android:overScrollMode="ifContentScrolls"/>
-
-                    <!-- Everyday sentence.  -->
-                    <TextView
-                        android:id="@+id/mainAct_StcEvrDay"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="15dp"
-                        android:layout_marginHorizontal="18dp"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="9dp"
-                        android:background="@drawable/main_act_evrdaystc"/>
-                </LinearLayout>
-            </ScrollView>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="end">
+                <Button
+                    android:id="@+id/mainAct_MenuBtn"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@mipmap/ic_menu" />
+            </LinearLayout>
         </LinearLayout>
 
-        <!-- Top bar expand menu -->
+        <!-- Main Content -->
         <LinearLayout
-            android:id="@+id/mainAct_TopBarMenu"
+            android:id="@+id/mainAct_mainContent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_alignTop="@+id/mainAct_mainContainLayout"
-            android:background="#88333333"
-            android:paddingVertical="58dp"
-            android:gravity="end"
-            android:visibility="gone">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <!-- Language selection View -->
+            <ScrollView
+                android:id="@+id/mainAct_SelectLang"
+                android:layout_width="match_parent"
+                android:layout_height="166dp"
+                android:visibility="gone"
+                android:paddingHorizontal="3dp">
+                <RadioGroup
+                    android:id="@+id/mainAct_LangRadioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <RadioButton
+                        android:id="@+id/mainAct_Select_Auto"
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:textSize="20sp"
+                        android:textAlignment="textStart"
+                        android:text="Auto"/>
+                    <RadioButton
+                        android:id="@+id/mainAct_Select_English"
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:textSize="20sp"
+                        android:textAlignment="textStart"
+                        android:text="English"/>
+                    <RadioButton
+                        android:id="@+id/mainAct_Select_Chinese"
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:textSize="20sp"
+                        android:textAlignment="textStart"
+                        android:text="Chinese"/>
+                </RadioGroup>
+            </ScrollView>
+
+            <!-- Language switch -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                android:orientation="horizontal"
+                android:layout_marginVertical="8dp">
+                <Button
+                    android:id="@+id/mainAct_SouLang"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:text="English"
+                    android:background="@drawable/set_button_selector"
+                    style="?android:attr/buttonBarButtonStyle" />
+                <Button
+                    android:id="@+id/mainAct_SwpSDLang"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_margin="10dp"
+                    android:padding="0dp"
+                    android:text="~"
+                    android:background="@drawable/set_button_selector"
+                    style="?android:attr/buttonBarButtonStyle" />
+                <Button
+                    android:id="@+id/mainAct_DesLang"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:text="Chinese"
+                    android:background="@drawable/set_button_selector"
+                    style="?android:attr/buttonBarButtonStyle" />
+            </LinearLayout>
+
+            <!-- Input text to translate -->
+            <EditText
+                android:id="@+id/mainAct_TextToTrans"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Input Words to translate here. "
+                android:text=""
+                android:layout_marginHorizontal="28dp"
+                android:layout_marginTop="18dp"
+                android:textSize="20sp"
+                android:maxHeight="230dp"
+                android:inputType="textMultiLine"
+                android:autofillHints="" />
 
             <Button
-                android:id="@+id/mainAct_MenuUseBaiduAPI"
-                android:layout_width="177dp"
-                android:layout_height="58dp"
-                android:text="Baidu Translate"/>
-            <Button
-                android:id="@+id/mainAct_MenuUseYoudaoAPI"
-                android:layout_width="177dp"
-                android:layout_height="58dp"
-                android:text="YouDao Translate"/>
-            <Button
-                android:id="@+id/mainAct_MenuUseXXXAPI"
-                android:layout_width="177dp"
-                android:layout_height="58dp"
-                android:text="..."/>
+                android:id="@+id/mainAct_StartTrans"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginVertical="14dp"
+                android:layout_marginHorizontal="42dp"
+                android:background="@drawable/set_button_selector"
+                android:text="Translate"/>
 
+            <!-- Translation output -->
+            <!-- sentence translation output view -->
+            <TextView
+                android:id="@+id/mainAct_TextOutput_tv"
+                android:layout_marginVertical="8dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:maxHeight="230dp"
+                android:overScrollMode="ifContentScrolls"
+                android:visibility="gone"/>
+            <!-- word look up output view -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/mainAct_wordOpt_sv">
+                <TextView
+                    android:id="@+id/mainAct_wordOpt_fanyi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:layout_marginHorizontal="18dp"
+                    android:layout_marginVertical="5dp"/>
+                <ListView
+                    android:id="@+id/mainAct_wordOpt_explainTranslation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="16dp"/>
+<!--                    <ListView-->
+<!--                        android:id="@+id/mainAct_wordOpt_explainExSentence"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginHorizontal="15dp"/>-->
+            </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
 
-</LinearLayout>
+        <!-- Everyday sentence.  -->
+        <TextView
+            android:id="@+id/mainAct_StcEvrDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="15dp"
+            android:layout_marginHorizontal="18dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="9dp"
+            android:background="@drawable/main_act_background_evr_day_stc"
+            android:gravity="bottom"
+            android:text="Everyday sentence."/>
+    </LinearLayout>
+
+    <!-- top layer -->
+    <!-- Top bar expand menu -->
+    <LinearLayout
+        android:id="@+id/mainAct_TopBarMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_alignTop="@+id/mainAct_mainContainLayout"
+        android:background="#88333333"
+        android:paddingVertical="58dp"
+        android:gravity="end"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/mainAct_MenuUseBaiduAPI"
+            android:layout_width="177dp"
+            android:layout_height="58dp"
+            android:text="Baidu Translate"/>
+        <Button
+            android:id="@+id/mainAct_MenuUseYoudaoAPI"
+            android:layout_width="177dp"
+            android:layout_height="58dp"
+            android:text="YouDao Translate"/>
+        <Button
+            android:id="@+id/mainAct_MenuUseXXXAPI"
+            android:layout_width="177dp"
+            android:layout_height="58dp"
+            android:text="..."/>
+
+    </LinearLayout>
+</RelativeLayout>
