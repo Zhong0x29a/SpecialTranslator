@@ -177,12 +177,13 @@
                     android:layout_height="wrap_content"
                     android:textSize="24sp"
                     android:layout_marginHorizontal="18dp"
-                    android:layout_marginVertical="5dp"/>
+                    android:layout_marginVertical="5dp"
+                    android:textIsSelectable="true"/>
                 <ListView
                     android:id="@+id/mainAct_wordOpt_explainTranslation"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginHorizontal="16dp"/>
+                    android:layout_marginHorizontal="16dp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -197,7 +198,8 @@
             android:paddingVertical="9dp"
             android:background="@drawable/main_act_background_evr_day_stc"
             android:gravity="bottom"
-            android:text="@string/everyday_sentence"/>
+            android:text="@string/everyday_sentence"
+            android:textIsSelectable="true"/>
     </LinearLayout>
 
     <!-- top layer -->

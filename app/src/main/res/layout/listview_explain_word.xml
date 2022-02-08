@@ -4,5 +4,6 @@
     android:layout_height="wrap_content"
     android:textSize="18sp"
     android:padding="8dp"
-    android:layout_margin="8dp">
+    android:layout_margin="8dp"
+    android:textIsSelectable="true">
 </TextView>
