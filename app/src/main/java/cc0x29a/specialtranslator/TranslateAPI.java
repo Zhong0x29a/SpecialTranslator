@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
@@ -68,9 +69,30 @@ public class TranslateAPI {
     public static class BaiduAPI{
         // todo: api token will expire in 30 days!
 
-        final static String APIToken="24.ebbfc44b1c5316fdea6ec0179efe7fb4.2592000.1645786137.282335-25560885";
+//        final static String APIToken="24.ebbfc44b1c5316fdea6ec0179efe7fb4.2592000.1645786137.282335-25560885";
 
-        public static String translateSentence(String fromLang, String toLang, String text){
+        public static String fetchNewToken(){
+            try{
+                HttpURLConnection conn=(HttpURLConnection) (new URL("http://0x29a.cc/rc/script/special_translator_fetch_new_token.php")).openConnection();
+                conn.setRequestMethod("GET");
+                conn.setDoInput(true);
+
+                InputStream is=conn.getInputStream();
+                if(conn.getResponseCode()==200) {
+                    String dataStr;
+                    dataStr = new String(StreamTool.read(is),StandardCharsets.UTF_8);
+
+                    is.close();
+                    conn.disconnect();
+                    return dataStr;
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        public static String translateSentence(String fromLang, String toLang, String text, String APIToken){
             try {
                 // pack the data.
                 JSONObject data=new JSONObject();
@@ -133,7 +155,7 @@ public class TranslateAPI {
                 dataSend.put("to",toLang);
                 dataSend.put("q",text);
 
-                URL url=new URL("https://aip.baidubce.com/rpc/2.0/mt/texttrans-with-dict/v1?access_token="+APIToken);
+                URL url=new URL("https://aip.baidubce.com/rpc/2.0/mt/texttrans-with-dict/v1?access_token="+"APIToken"); //todo err token!
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
 
                 conn.setRequestMethod("POST");

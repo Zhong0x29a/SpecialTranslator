@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.TypedArrayUtils;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     String fromLang,toLang;
     String API;
+    String BaiduAPIToken;
 
     // languages set
     HashMap id2lang=new HashMap<Integer,String>();
@@ -54,10 +56,32 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // todo: save "last status"
+        SharedPreferences sharedPreferences=getSharedPreferences("token",MODE_PRIVATE);
+//        new Thread(()->{
+//            if(sharedPreferences.getString("BaiduToken",null)==null){
+//                String token=TranslateAPI.BaiduAPI.fetchNewToken();
+//                sharedPreferences.edit().putString("BaiduToken",token).apply();
+//            }
+//        }).start();
+
+        new Thread(()->{
+            long timeCurr=System.currentTimeMillis();
+            long BDTokenExpDate=Long.parseLong(sharedPreferences.getString("BaiduToken_expDate","0"));
+            if(timeCurr >= BDTokenExpDate){
+                String token=TranslateAPI.BaiduAPI.fetchNewToken();
+                sharedPreferences.edit().putString("BaiduToken",token).apply();
+                sharedPreferences.edit().putString("BaiduToken_expDate",(timeCurr+7*24*60*60*1000)+"").apply();
+                BaiduAPIToken=token;
+            }
+        }).start();
+
         // set default sourceLang & DestinyLang
         fromLang="en";
         toLang="zh";
         API="baidu";
+
+        // fetch baidu api token
+        BaiduAPIToken=sharedPreferences.getString("BaiduToken","");
 
         // Select Language section.
         id2lang.put(R.id.mainAct_Select_Auto,"auto");
@@ -138,13 +162,13 @@ public class MainActivity extends AppCompatActivity {
                 String textOutput;
                 switch (API) {
                     case "baidu":
-                        textOutput = TranslateAPI.BaiduAPI.translateSentence(fromLang, toLang, textToTrans);
+                        textOutput = TranslateAPI.BaiduAPI.translateSentence(fromLang, toLang, textToTrans,BaiduAPIToken);
                         break;
                     case "youdao":
                         textOutput = TranslateAPI.YouDaoAPI.translate(fromLang, toLang, textToTrans);
                         break;
                     default:
-                        textOutput = TranslateAPI.BaiduAPI.translateSentence(fromLang, toLang, textToTrans);
+                        textOutput = TranslateAPI.BaiduAPI.translateSentence(fromLang, toLang, textToTrans, BaiduAPIToken);
                 }
                 setTvTextOutputCont(textOutput);
             }
