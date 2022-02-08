@@ -57,12 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
         // todo: save "last status"
         SharedPreferences sharedPreferences=getSharedPreferences("token",MODE_PRIVATE);
-//        new Thread(()->{
-//            if(sharedPreferences.getString("BaiduToken",null)==null){
-//                String token=TranslateAPI.BaiduAPI.fetchNewToken();
-//                sharedPreferences.edit().putString("BaiduToken",token).apply();
-//            }
-//        }).start();
 
         new Thread(()->{
             long timeCurr=System.currentTimeMillis();
