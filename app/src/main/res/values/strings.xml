@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Special Translator</string>
+    <string name="translate">Translate</string>
+    <string name="input_words_to_translate_here">Input Words to translate here.</string>
+    <string name="zh">Zh</string>
+    <string name="exchange_sign">~</string>
+    <string name="en">En</string>
+    <string name="chinese">Chinese</string>
+    <string name="english">English</string>
+    <string name="auto">Auto</string>
+    <string name="everyday_sentence">Everyday sentence.</string>
+    <string name="baidu_translate">Baidu Translate</string>
+    <string name="youdao_translate">YouDao Translate</string>
+    <string name="more_sign">…</string>
 </resources>

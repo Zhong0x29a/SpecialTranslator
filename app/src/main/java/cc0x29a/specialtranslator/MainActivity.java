@@ -32,21 +32,17 @@ public class MainActivity extends AppCompatActivity {
     RadioButton rbSelectAuto,rbSelectEn,rbSelectCn;
 
     Button btnSelectSouLang,btnSelectDesLang;
-    Button btnSwapSDLang;
 
     EditText etTextToTrans;
-    Button btnStartTrans;
     TextView tvTextOutput;
-
-//    Button btnMenu;
-    Button btnUseBaidu,btnUseYoudao;
 
     String fromLang,toLang;
     String API;
     String BaiduAPIToken;
 
     // languages set
-    HashMap id2lang=new HashMap<Integer,String>();
+    HashMap<Integer,String> id2lang=new HashMap<>();
+    HashMap<String,Integer> lang2id=new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
         id2lang.put(R.id.mainAct_Select_Auto,"auto");
         id2lang.put(R.id.mainAct_Select_English,"en");
         id2lang.put(R.id.mainAct_Select_Chinese,"zh");
+        lang2id.put("auto",R.id.mainAct_Select_Auto);
+        lang2id.put("en",R.id.mainAct_Select_English);
+        lang2id.put("zh",R.id.mainAct_Select_Chinese);
 
         svSelectLang=findViewById(R.id.mainAct_SelectLang);
         rgLangGroup=findViewById(R.id.mainAct_LangRadioGroup);
@@ -67,17 +66,10 @@ public class MainActivity extends AppCompatActivity {
         // Click to chang language section.
         btnSelectSouLang=findViewById(R.id.mainAct_SouLang);
         btnSelectDesLang=findViewById(R.id.mainAct_DesLang);
-        btnSwapSDLang=findViewById(R.id.mainAct_SwpSDLang);
 
         // Inout and output section.
         etTextToTrans=findViewById(R.id.mainAct_TextToTrans);
-        btnStartTrans=findViewById(R.id.mainAct_StartTrans);
         tvTextOutput=findViewById(R.id.mainAct_TextOutput_tv);
-
-        // TopBar section.
-//        btnMenu=findViewById(R.id.mainAct_MenuBtn);
-        btnUseBaidu=findViewById(R.id.mainAct_MenuUseBaiduAPI);
-        btnUseYoudao=findViewById(R.id.mainAct_MenuUseYoudaoAPI);
 
         // Bind Listener.
         // Languages Radio group.
@@ -85,10 +77,10 @@ public class MainActivity extends AppCompatActivity {
             // set the lang.
             try {
                 if (svSelectLang.getTag().toString().equals("SourceLang")) {
-                    fromLang = Objects.requireNonNull(id2lang.get(i)).toString();
+                    fromLang = Objects.requireNonNull(id2lang.get(i));
                     btnSelectSouLang.setText(fromLang);
                 } else if (svSelectLang.getTag().toString().equals("DestinyLang")) {
-                    toLang = Objects.requireNonNull(id2lang.get(i)).toString();
+                    toLang = Objects.requireNonNull(id2lang.get(i));
                     btnSelectDesLang.setText(toLang);
                 }
             }catch (NullPointerException e){
@@ -96,12 +88,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // hide the scroll view
-            showOrHideRadioGroupAuto("no");
+            showOrHideRadioGroupAuto("");
         });
 
         // click to select another language.
         btnSelectSouLang.setOnClickListener(cliListenerChangeLangBTN);
-        btnSwapSDLang.setOnClickListener(cliListenerChangeLangBTN);
+        findViewById(R.id.mainAct_SwpSDLang).setOnClickListener(cliListenerChangeLangBTN);
         btnSelectDesLang.setOnClickListener(cliListenerChangeLangBTN);
 
         // open/close menu
@@ -109,11 +101,11 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.mainAct_TopBarMenu).setOnClickListener(view -> openOrCloseTopBarMenu());
 
         // select API
-        btnUseBaidu.setOnClickListener(cliListenerChangeAPI);
-        btnUseYoudao.setOnClickListener(cliListenerChangeAPI);
+        findViewById(R.id.mainAct_MenuUseBaiduAPI).setOnClickListener(cliListenerChangeAPI);
+        findViewById(R.id.mainAct_MenuUseYoudaoAPI).setOnClickListener(cliListenerChangeAPI);
 
         // Start Translation.
-        btnStartTrans.setOnClickListener(view -> new Thread( () -> {
+        findViewById(R.id.mainAct_StartTrans).setOnClickListener(view -> new Thread( () -> {
             String textToTrans=etTextToTrans.getText().toString();
 
             // if search for a word, look up the dictionary.
@@ -129,6 +121,12 @@ public class MainActivity extends AppCompatActivity {
                 showAndHideOptView(false);
                 // if search sentence
                 String textOutput;
+                if ("youdao".equals(API)) {
+                    textOutput = TranslateAPI.YouDaoAPI.translate(fromLang, toLang, textToTrans);
+                } else {
+                    textOutput = TranslateAPI.BaiduAPI.translateSentence(fromLang, toLang, textToTrans, BaiduAPIToken);
+                }
+/*
                 switch (API) {
                     case "baidu":
                         textOutput = TranslateAPI.BaiduAPI.translateSentence(fromLang, toLang, textToTrans,BaiduAPIToken);
@@ -139,15 +137,16 @@ public class MainActivity extends AppCompatActivity {
                     default:
                         textOutput = TranslateAPI.BaiduAPI.translateSentence(fromLang, toLang, textToTrans, BaiduAPIToken);
                 }
+*/
                 setTvTextOutputCont(textOutput);
             }
         }).start());
 
-        // save "last status"
-        SharedPreferences sharedPreferences=getSharedPreferences("info",MODE_PRIVATE);
+        // get "last status"
         // to refresh Baidu api token.
         new Thread(()->{
             long timeCurr=System.currentTimeMillis();
+            SharedPreferences sharedPreferences=getSharedPreferences("info",MODE_PRIVATE);
             long BDTokenExpDate=Long.parseLong(sharedPreferences.getString("BaiduToken_expDate","0"));
             if(timeCurr >= BDTokenExpDate){
                 String token=TranslateAPI.BaiduAPI.fetchNewToken();
@@ -158,10 +157,11 @@ public class MainActivity extends AppCompatActivity {
         }).start();
 
         // fetch baidu api token from local
-        BaiduAPIToken=sharedPreferences.getString("BaiduToken","");
+        BaiduAPIToken=getSharedPreferences("info",MODE_PRIVATE).getString("BaiduToken","");
 
         // set default sourceLang & DestinyLang
         new Thread(()-> {
+            SharedPreferences sharedPreferences=getSharedPreferences("info",MODE_PRIVATE);
             fromLang=sharedPreferences.getString("fromLang","en");
             toLang=sharedPreferences.getString("toLang","zh");
             API=sharedPreferences.getString("API","baidu");
@@ -222,8 +222,17 @@ public class MainActivity extends AppCompatActivity {
     };
 
     // Change API
+    @SuppressLint("NonConstantResourceId")
     View.OnClickListener cliListenerChangeAPI = view -> {
-        switch (view.getId()){
+        if (view.getId() == R.id.mainAct_MenuUseYoudaoAPI) {
+            API = "youdao";
+            getSharedPreferences("info", MODE_PRIVATE).edit().putString("API", "youdao").apply();
+        } else {
+            API = "baidu";
+            getSharedPreferences("info", MODE_PRIVATE).edit().putString("API", "baidu").apply();
+        }
+
+/*       switch (view.getId()){
             case R.id.mainAct_MenuUseBaiduAPI:
                 API="baidu";
                 getSharedPreferences("info",MODE_PRIVATE).edit().putString("API","baidu").apply();
@@ -236,39 +245,24 @@ public class MainActivity extends AppCompatActivity {
                 API="baidu";
                 getSharedPreferences("info",MODE_PRIVATE).edit().putString("API","baidu").apply();
         }
+*/
+
         openOrCloseTopBarMenu();
     };
 
-    // Show/hide Checkbox.
-    //todo: may no use? or simplify?
-    /**
-     * use to set the visibility of the radio group.
-     * @param isDestLang    if true, set "auto" uncheckable.
-     * @param checkedOne    set which "were" selected.
-     */
-    public void setRadioGroupChecked(boolean isDestLang,String checkedOne){
-        rbSelectAuto.setClickable(!isDestLang);
-        switch (checkedOne){
-            case "auto":
-                rbSelectAuto.setChecked(true);
-                break;
-            case "en":
-                rbSelectEn.setChecked(true);
-                break;
-            case "zh":
-                rbSelectCn.setChecked(true);
-                break;
-        }
-    }
-
+//    @SuppressLint("NullPointerException")
     public void showOrHideRadioGroupAuto(String fromOrTo){
         if(svSelectLang.getVisibility()==View.VISIBLE){
             svSelectLang.setVisibility(View.GONE);
         }else{
             if(fromOrTo.equals("from")) {
-                setRadioGroupChecked(false, fromLang);
+                rbSelectAuto.setClickable(true);
+                RadioButton rb = findViewById(lang2id.get(fromLang));
+                rb.setChecked(true);
             }else if(fromOrTo.equals("to")){
-                setRadioGroupChecked(true,toLang);
+                rbSelectAuto.setClickable(false);
+                RadioButton rb = findViewById(lang2id.get(toLang));
+                rb.setChecked(true);
             }
             svSelectLang.setVisibility(View.VISIBLE);
         }
@@ -306,11 +300,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Set the Output view new content
+    @SuppressLint("SetTextI18n")
     public void setTvTextOutputCont(String text){
         MainActivity.this.runOnUiThread(() -> tvTextOutput.setText(text+"\n\n--by "+API));
     }
 
     // display the word lookup details.
+    @SuppressLint("SetTextI18n")
     public void displayWordLookupDetail(JSONObject data){
         // init?
         try {
@@ -359,7 +355,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Display the Everyday Sentence.
-    public void setTvTextStcEvrDay(String textEng,String textZh){
+    @SuppressLint("SetTextI18n")
+    public void setTvTextStcEvrDay(String textEng, String textZh){
         MainActivity.this.runOnUiThread(() -> {
             TextView tv=findViewById(R.id.mainAct_StcEvrDay);
             tv.setText("Everyday sentence: \n\n    "+textEng+"\n    "+textZh+"\n\n-by iciba");

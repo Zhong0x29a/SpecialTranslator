@@ -9,9 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.util.stream.Stream;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -20,6 +18,7 @@ public class TranslateAPI {
     // 360 's API
     public static class _360API{
         public static JSONObject lookupDictionary(String fromLang, String toLang, String text){
+            // https://fanyi.so.com/#
             // https://fanyi.so.com/index/search?eng=1&validate=&ignore_trans=0&query=apple
             try{
                 int eng=getEng(fromLang);
@@ -67,8 +66,6 @@ public class TranslateAPI {
 
     // Baidu 's API
     public static class BaiduAPI{
-        // todo: api token will expire in 30 days!
-
 //        final static String APIToken="24.ebbfc44b1c5316fdea6ec0179efe7fb4.2592000.1645786137.282335-25560885";
 
         public static String fetchNewToken(){
