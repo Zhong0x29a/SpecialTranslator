@@ -1,7 +1,5 @@
 package cc0x29a.specialtranslator;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +14,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.mainAct_StcEvrDay_tv).setVisibility(View.VISIBLE);
                 break;
             case R.id.mainAct_openAbout:
-                startActivity(new Intent(this,About.class));
+                startActivity(new Intent(this, AboutActivity.class));
                 break;
         }
 

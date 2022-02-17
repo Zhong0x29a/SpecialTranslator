@@ -16,7 +16,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
-            android:name=".About"
+            android:name=".AboutActivity"
             android:exported="false"
             android:theme="@style/generalNoTitle" />
         <!-- android:roundIcon="@mipmap/ic_launcher_round" -->
