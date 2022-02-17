@@ -1,11 +1,11 @@
 package cc0x29a.specialtranslator;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -34,6 +34,7 @@ public class About extends AppCompatActivity {
 
                 con.setRequestMethod("GET");
                 con.setDoInput(true);
+
                 con.setReadTimeout(10000);
                 con.setConnectTimeout(10000);
 
