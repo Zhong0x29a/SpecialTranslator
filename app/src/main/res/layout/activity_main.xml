@@ -189,7 +189,7 @@
 
         <!-- Everyday sentence.  -->
         <TextView
-            android:id="@+id/mainAct_StcEvrDay"
+            android:id="@+id/mainAct_StcEvrDay_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="15dp"
@@ -226,9 +226,15 @@
             android:layout_height="58dp"
             android:text="@string/youdao_translate"/>
         <Button
+            android:id="@+id/mainAct_MenuShowStcEvrDay"
             android:layout_width="177dp"
             android:layout_height="58dp"
-            android:text="@string/more_sign"/>
+            android:text="@string/show_everyday_sentence"/>
+        <Button
+            android:id="@+id/mainAct_openAbout"
+            android:layout_width="177dp"
+            android:layout_height="58dp"
+            android:text="@string/open_about"/>
 
     </LinearLayout>
 </RelativeLayout>

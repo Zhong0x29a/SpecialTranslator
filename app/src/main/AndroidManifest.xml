@@ -13,9 +13,11 @@
         android:theme="@style/Theme.SpecialTranslator"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <!--        android:roundIcon="@mipmap/ic_launcher_round"-->
-
-
+        <activity
+            android:name=".About"
+            android:exported="false"
+            android:theme="@style/generalNoTitle" />
+        <!-- android:roundIcon="@mipmap/ic_launcher_round" -->
         <activity
             android:name=".MainActivity"
             android:exported="true"

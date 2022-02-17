@@ -3,6 +3,7 @@ package cc0x29a.specialtranslator;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -26,7 +27,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    // todo: clean the codes!!!!
+    // todo: TTS 
     ScrollView svSelectLang;
     RadioGroup rgLangGroup;
     RadioButton rbSelectAuto,rbSelectEn,rbSelectCn;
@@ -100,9 +101,11 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.mainAct_MenuBtn).setOnClickListener(view -> openOrCloseTopBarMenu());
         findViewById(R.id.mainAct_TopBarMenu).setOnClickListener(view -> openOrCloseTopBarMenu());
 
-        // select API
-        findViewById(R.id.mainAct_MenuUseBaiduAPI).setOnClickListener(cliListenerChangeAPI);
-        findViewById(R.id.mainAct_MenuUseYoudaoAPI).setOnClickListener(cliListenerChangeAPI);
+        // Top bar menu items
+        findViewById(R.id.mainAct_MenuUseBaiduAPI).setOnClickListener(menuOnCliListener);
+        findViewById(R.id.mainAct_MenuUseYoudaoAPI).setOnClickListener(menuOnCliListener);
+        findViewById(R.id.mainAct_MenuShowStcEvrDay).setOnClickListener(menuOnCliListener);
+        findViewById(R.id.mainAct_openAbout).setOnClickListener(menuOnCliListener);
 
         // Start Translation.
         findViewById(R.id.mainAct_StartTrans).setOnClickListener(view -> new Thread( () -> {
@@ -174,8 +177,8 @@ public class MainActivity extends AppCompatActivity {
 
         // todo: set it fold able
         // hide the everyday sentence.
-        findViewById(R.id.mainAct_StcEvrDay).setOnLongClickListener((view) -> {
-            findViewById(R.id.mainAct_StcEvrDay).setVisibility(View.GONE);
+        findViewById(R.id.mainAct_StcEvrDay_tv).setOnLongClickListener((view) -> {
+            findViewById(R.id.mainAct_StcEvrDay_tv).setVisibility(View.GONE);
             return true;
         });
     }
@@ -183,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         // fetch the everyday sentence.
         new Thread(()->{
             String[] strArr=EveryDayAPI.EverydaySentence.fetchEverydaySentence();
@@ -221,18 +223,11 @@ public class MainActivity extends AppCompatActivity {
         getSharedPreferences("info",MODE_PRIVATE).edit().putString("toLang",toLang).apply();
     };
 
-    // Change API
+    // onClickListener when menu item selected.
     @SuppressLint("NonConstantResourceId")
-    View.OnClickListener cliListenerChangeAPI = view -> {
-        if (view.getId() == R.id.mainAct_MenuUseYoudaoAPI) {
-            API = "youdao";
-            getSharedPreferences("info", MODE_PRIVATE).edit().putString("API", "youdao").apply();
-        } else {
-            API = "baidu";
-            getSharedPreferences("info", MODE_PRIVATE).edit().putString("API", "baidu").apply();
-        }
+    View.OnClickListener menuOnCliListener = view -> {
 
-/*       switch (view.getId()){
+        switch (view.getId()){
             case R.id.mainAct_MenuUseBaiduAPI:
                 API="baidu";
                 getSharedPreferences("info",MODE_PRIVATE).edit().putString("API","baidu").apply();
@@ -241,11 +236,14 @@ public class MainActivity extends AppCompatActivity {
                 API="youdao";
                 getSharedPreferences("info",MODE_PRIVATE).edit().putString("API","youdao").apply();
                 break;
-            default:
-                API="baidu";
-                getSharedPreferences("info",MODE_PRIVATE).edit().putString("API","baidu").apply();
+            case R.id.mainAct_MenuShowStcEvrDay:
+                findViewById(R.id.mainAct_StcEvrDay_tv).setVisibility(View.VISIBLE);
+                break;
+            case R.id.mainAct_openAbout:
+                startActivity(new Intent(this,About.class));
+                break;
         }
-*/
+
 
         openOrCloseTopBarMenu();
     };
@@ -358,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     public void setTvTextStcEvrDay(String textEng, String textZh){
         MainActivity.this.runOnUiThread(() -> {
-            TextView tv=findViewById(R.id.mainAct_StcEvrDay);
+            TextView tv=findViewById(R.id.mainAct_StcEvrDay_tv);
             tv.setText("Everyday sentence: \n\n    "+textEng+"\n    "+textZh+"\n\n-by iciba");
         });
     }
