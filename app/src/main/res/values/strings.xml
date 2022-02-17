@@ -13,4 +13,5 @@
     <string name="youdao_translate">Use YouDao Translate</string>
     <string name="open_about">About</string>
     <string name="show_everyday_sentence">Show Everyday Sentence</string>
+    <string name="about_info">Website: translator.0x29a.cc\nMail: root@0x29a.cc</string>
 </resources>

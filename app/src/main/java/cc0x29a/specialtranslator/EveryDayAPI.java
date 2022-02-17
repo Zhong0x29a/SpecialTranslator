@@ -19,7 +19,7 @@ public class EveryDayAPI {
                 conn.setRequestMethod("GET");
                 conn.setConnectTimeout(5000);
                 conn.setReadTimeout(5000);
-                conn.setDoOutput(true);
+                conn.setDoInput(true);
 
                 if(conn.getResponseCode()==200){
                     InputStream is=conn.getInputStream();
@@ -34,6 +34,7 @@ public class EveryDayAPI {
                     String note=dataJSON.getString("note");
                     return new String[]{content,note};
                 }
+                conn.disconnect();
             }catch (Exception e){
                 System.err.println(e.getMessage());
             }

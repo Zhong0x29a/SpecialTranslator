@@ -20,7 +20,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:paddingHorizontal="8dp"
+                android:paddingHorizontal="10dp"
                 android:textSize="26sp"
                 android:textAlignment="textStart"
                 android:text="@string/app_name"
@@ -29,9 +29,14 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/aboutAct_app_info"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:text="HEllo"
-        android:layout_weight="1"/>
+        android:layout_height="wrap_content"
+        android:text="Special Translator - 1.0.7"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/about_info"/>
 
 </LinearLayout>
