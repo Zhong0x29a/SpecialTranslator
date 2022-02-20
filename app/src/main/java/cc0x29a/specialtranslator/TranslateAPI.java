@@ -6,8 +6,6 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -70,19 +68,9 @@ public class TranslateAPI {
 
         public static String fetchNewToken(){
             try{
-                HttpURLConnection conn=(HttpURLConnection) (new URL("http://0x29a.cc/rc/script/special_translator_fetch_new_token.php")).openConnection();
-                conn.setRequestMethod("GET");
-                conn.setDoInput(true);
-
-                InputStream is=conn.getInputStream();
-                if(conn.getResponseCode()==200) {
-                    String dataStr;
-                    dataStr = new String(StreamTool.read(is),StandardCharsets.UTF_8);
-
-                    is.close();
-                    conn.disconnect();
-                    return dataStr;
-                }
+                NetworkTools.MyHTTP myHTTP=new NetworkTools.MyHTTP();
+                myHTTP.url=new URL("http://0x29a.cc/rc/script/special_translator_fetch_new_token.php");
+                return myHTTP.GetHttpURL();
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -97,38 +85,17 @@ public class TranslateAPI {
                 data.put("to",toLang);
                 data.put("q",text);
 
-                java.net.URL url = new URL("https://aip.baidubce.com/rpc/2.0/mt/texttrans/v1?access_token="+APIToken);
-                HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+                NetworkTools.MyHTTP myHTTP = new NetworkTools.MyHTTP();
+                myHTTP.url=new URL("https://aip.baidubce.com/rpc/2.0/mt/texttrans/v1?access_token="+APIToken);
 
-                conn.setRequestMethod("POST");
-                conn.setReadTimeout(5000);
-                conn.setConnectTimeout(5000);
+                String result=myHTTP.PostHttpsURL(data.toString());
 
-                //设置运行输入,输出:
-                conn.setDoOutput(true);
-                conn.setDoInput(true);
-                //Post method cant use caches.
-                conn.setUseCaches(false);
-
-                OutputStream out=conn.getOutputStream();
-                out.write(( data.toString() ).getBytes());
-                out.flush();
-                out.close();
-
-                if (conn.getResponseCode() == 200) {
-                    System.out.println("ok!");
-
-                    InputStream in = conn.getInputStream();
-                    byte[] dataByte = StreamTool.read(in);
-
-                    in.close();
-                    conn.disconnect();
-
-                    JSONObject jsonObject = new JSONObject(new String(dataByte, StandardCharsets.UTF_8));
+                if(result!=null){
+                    JSONObject jsonObject = new JSONObject(result);
 
                     StringBuilder sb = new StringBuilder();
                     for(int i=0;i<jsonObject.getJSONObject("result").getJSONArray("trans_result")
-                                .length();i++){
+                            .length();i++){
                         sb.append(jsonObject.getJSONObject("result").getJSONArray("trans_result")
                                 .getJSONObject(i).getString("dst"));
                         sb.append("\n");
@@ -143,7 +110,7 @@ public class TranslateAPI {
             }
             return ":<..";
         }
-
+/*
         public static String[] lookUpDictionary(String fromLang,String toLang,String text){
             try{
                 // pack the data.
@@ -192,41 +159,23 @@ public class TranslateAPI {
             }
 
             return null;
-        }
+        }*/
     }
 
     // YouDao 's API
     public static class YouDaoAPI{
         public static String translate(String fromLang,String toLang,String text){
             try{
-                String TType=getTType(fromLang,toLang); // Translate type
-                String URL_String="https://fanyi.youdao.com/translate?&doctype=json&type="+TType+"&i="+text;
+                NetworkTools.MyHTTP myHTTP = new NetworkTools.MyHTTP();
 
-                java.net.URL url=new URL(URL_String);
-                HttpsURLConnection conn=(HttpsURLConnection) url.openConnection();
+                myHTTP.url= new URL("https://fanyi.youdao.com/translate?&doctype=json&type="+getTType(fromLang,toLang)+"&i="+text);
 
-                conn.setRequestMethod("GET");
-                conn.setConnectTimeout(5000);
-                conn.setReadTimeout(5000);
-
-                conn.setDoOutput(true);
-                conn.setDoInput(true);
-
-                if(conn.getResponseCode()==200){
-                    System.out.println("ok!");
-                    InputStream inputStream= conn.getInputStream();
-                    byte[] dataByte=StreamTool.read(inputStream);
-
-                    inputStream.close();
-                    conn.disconnect();
-
-                    JSONObject jsonObject=new JSONObject(new String(dataByte, StandardCharsets.UTF_8));
-
+                String data=myHTTP.GetHttpsURL();
+                if(data!=null){
+                    JSONObject jsonObject=new JSONObject(data);
                     return jsonObject.getJSONArray("translateResult").getJSONArray(0)
                             .getJSONObject(0).getString("tgt");
-
                 }
-
             }catch (Exception e){
                 System.err.println(e.getMessage());
             }

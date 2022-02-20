@@ -10,11 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.InputStream;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -41,23 +37,12 @@ public class AboutActivity extends AppCompatActivity {
         // fetch new version code.
         new Thread(()->{
             try{
-                // todo: 封装http方法，以简化代码！
-                URL url=new URL("https://gitee.com/galaxy-cube/SpecialTranslator/raw/master/version");
-                HttpsURLConnection con=(HttpsURLConnection) url.openConnection();
+                NetworkTools.MyHTTP myHTTP=new NetworkTools.MyHTTP();
+                myHTTP.url= new URL("https://gitee.com/galaxy-cube/SpecialTranslator/raw/master/version");
+                String data=myHTTP.GetHttpsURL();
 
-                con.setRequestMethod("GET");
-                con.setDoInput(true);
-
-                con.setReadTimeout(5000);
-                con.setConnectTimeout(5000);
-
-                if(con.getResponseCode() == 200) {
-                    InputStream is = con.getInputStream();
-                    byte[] data=TranslateAPI.StreamTool.read(is);
-                    is.close();
-                    con.disconnect();
-
-                    final int newVersionCode=Integer.parseInt(new String(data, StandardCharsets.UTF_8));
+                if(data != null){
+                    final int newVersionCode=Integer.parseInt(data);
 
                     AboutActivity.this.runOnUiThread(()->{
                         TextView t=findViewById(R.id.aboutAct_app_newVer);
@@ -69,34 +54,29 @@ public class AboutActivity extends AppCompatActivity {
                     });
 
                     if(newVersionCode > getPackageManager().getPackageInfo(getPackageName(),0).versionCode){
-                        url=new URL("https://gitee.com/galaxy-cube/SpecialTranslator/raw/master/new_feature");
-                        con=(HttpsURLConnection) url.openConnection();
+                        NetworkTools.MyHTTP myHTTP2= new NetworkTools.MyHTTP();
+                        myHTTP2.url = new URL("https://gitee.com/galaxy-cube/SpecialTranslator/raw/master/new_feature");
 
-                        con.setRequestMethod("GET");
-                        con.setDoInput(true);
+                        String data2=myHTTP2.GetHttpsURL();
 
-                        con.setReadTimeout(5000);
-                        con.setConnectTimeout(5000);
-
-                        if(con.getResponseCode()==200){
-                            is = con.getInputStream();
-                            final byte[] data2=TranslateAPI.StreamTool.read(is);
-                            is.close();
-                            con.disconnect();
-                            AboutActivity.this.runOnUiThread(()->{
-                                TextView t=findViewById(R.id.aboutAct_app_newVer_info);
-                                t.setText("New features"+(new String(data2,StandardCharsets.UTF_8)) );
-                                Toast.makeText(AboutActivity.this,"Has new version! \nClick the button to upgrade",Toast.LENGTH_LONG).show();
+                        if(data2 != null) {
+                            AboutActivity.this.runOnUiThread(() -> {
+                                TextView t = findViewById(R.id.aboutAct_app_newVer_info);
+                                t.setText("New features:\n" + data2);
+                                Toast.makeText(AboutActivity.this, "Has new version! \nClick the button to upgrade", Toast.LENGTH_LONG).show();
                             });
                         }
+                    }else{
+                        AboutActivity.this.runOnUiThread(()->{
+                            findViewById(R.id.aboutAct_upgradeBtn).setClickable(false);
+                        });
                     }
                 }else{
                     AboutActivity.this.runOnUiThread(()->{
-                        Toast.makeText(AboutActivity.this,"Something Error!!",Toast.LENGTH_LONG).show();
+                        Toast.makeText(AboutActivity.this,"Network Error!!",Toast.LENGTH_LONG).show();
                     });
-                    con.disconnect();
                 }
-            }catch (Exception e){
+            }catch(Exception e){
                 AboutActivity.this.runOnUiThread(()->{
                     Toast.makeText(AboutActivity.this,"Network Error!!",Toast.LENGTH_LONG).show();
                 });

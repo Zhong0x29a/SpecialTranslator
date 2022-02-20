@@ -387,7 +387,6 @@ public class MainActivity extends AppCompatActivity {
             for(int i=0; i < jsonArray.length(); i++){
                 strArr[i+1]=(i+1)+".  "+jsonArray.getJSONObject(i).getString(name1).replace("<b>","").replace("</b>","");
                 strArr[i+1]+="\n    "+jsonArray.getJSONObject(i).getString(name2);
-//                strArr[i]="----------";
             }
             return strArr;
         }catch (Exception e){
