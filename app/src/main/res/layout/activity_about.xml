@@ -36,15 +36,15 @@
         android:text=""/>
 
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/about_info"/>
+
+    <TextView
         android:id="@+id/aboutAct_app_newVer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="No new version. "/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/about_info"/>
 
     <TextView
         android:id="@+id/aboutAct_app_newVer_info"
